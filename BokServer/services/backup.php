@@ -2,7 +2,7 @@
 include_once ("../conf/AppConfig.php");
 include_once ("../classes/auth/User.php");
 include_once ("../classes/util/DB.php");
-include_once ("../classes/accounting/accountstandard.php");
+include_once ("../classes/util/standard.php");
 include_once ("../classes/util/backupdb.php");
 include_once ("../classes/util/logger.php");
 include_once ("../classes/auth/RegnSession.php");
@@ -14,7 +14,7 @@ $db = new DB();
 $regnSession = new RegnSession($db);
 $backup = new BackupDB($db);
 $regnSession->auth();
-$acStandard = new AccountStandard($db);
+$acStandard = new Standard($db);
 
 switch ($action) {
 	case "tables" :
