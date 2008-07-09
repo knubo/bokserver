@@ -2,7 +2,7 @@
 /*
  */
  
-include_once ("../../conf/Version.php");
+include_once ("../conf/Version.php");
  
 
 $arr = array();
