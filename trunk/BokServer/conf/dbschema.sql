@@ -1,3 +1,38 @@
+create table bok_author(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+); 
+
+create table bok_translator(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+); 
+
+create table bok_illustrator(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+); 
+
+create table bok_book(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+);
+
+create table book_owner(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  book_id INTEGER(8) UNSIGNED,
+  username 
+)
+
+create table book_placement(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+); 
+
+create table book_category(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+);
+
+create table book_owner(
+  book_id INTEGER(8) UNSIGNED,
+  user_id INTEGER(8) UNSIGNED
+  );
+
 create table if not exists bok_log(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   occured TIMESTAMP,
@@ -9,7 +44,8 @@ create table if not exists bok_log(
 
 
 create table if not exists bok_user(
-  username varchar(25) PRIMARY KEY,
+  username varchar(25) UNIQUE,
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   pass varchar(15),
   person varchar(40),
   readonly tinyint,
