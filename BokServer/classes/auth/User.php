@@ -67,7 +67,7 @@ class User {
     }
     
     function getAll() {
-    	$bind = $this->db->prepare("select username, person, concat_ws(' ',firstname, lastname) as name, readonly,reducedwrite from ". AppConfig :: DB_PREFIX ."user, ".AppConfig :: DB_PREFIX."person where id=person");
+    	$bind = $this->db->prepare("select username, person, readonly,reducedwrite from ". AppConfig :: DB_PREFIX ."user");
         return $bind->execute();
     }
     
@@ -84,7 +84,7 @@ class User {
     function save($user, $password, $person, $readonly, $reducedwrite) {
         if(!$password) {
             $bind = $this->db->prepare("update ". AppConfig :: DB_PREFIX ."user set person=?,readonly=?,reducedwrite=? where username=?");
-            $bind->bind_params("iiis", $person, $readonly, $reducedwrite, $user);
+            $bind->bind_params("siis", $person, $readonly, $reducedwrite, $user);
             $bind->execute();
         
             return $this->db->affected_rows();
@@ -93,7 +93,7 @@ class User {
     	$bind = $this->db->prepare("insert into ". AppConfig :: DB_PREFIX ."user set pass=?, person=?, username=?,readonly=? ON DUPLICATE KEY UPDATE pass=?,person=?,readonly=?,reducedwrite=?");
         $pass = crypt($password, $this->makesalt());
         
-        $bind->bind_params("sisisiii", $pass, $person, $user, $readonly, $pass, $person, $readonly,$reducedwrite);
+        $bind->bind_params("sssisiii", $pass, $person, $user, $readonly, $pass, $person, $readonly,$reducedwrite);
         $bind->execute();
         
         return $this->db->affected_rows();
