@@ -1,5 +1,6 @@
 <?php
 
+
 /*
  * Created on Jul 16, 2007
  *
@@ -19,7 +20,7 @@ $reducedwrite = array_key_exists("reducedwrite", $_REQUEST) ? $_REQUEST["reduced
 $db = new DB();
 $regnSession = new RegnSession($db);
 $loggedInUser = $regnSession->auth();
- 
+
 switch ($action) {
 	case "all" :
 		$accUsers = new User($db);
@@ -29,26 +30,26 @@ switch ($action) {
 	case "save" :
 		$res = array ();
 
-        if($loggedInUser == $user && $regnSession->hasReducedWriteAccess()) {
-            $accUsers = new User($db);
-            $rowsAffected = $accUsers->updatePassword($user, $password);
-            $res["result"] = $rowsAffected;
-        } else {
-            $regnSession->checkWriteAccess();
-    		$accUsers = new User($db);
-    		$rowsAffected = $accUsers->save($user, $password, $person,$readonly, $reducedwrite);        	
-    		$res["result"] = $rowsAffected;
-        }
-    
-		echo json_encode($res);
-        break;  
-	case "delete" :
-        $regnSession->checkWriteAccess();
-        $accUsers = new User($db);
-        $rowsAffected = $accUsers->delete($user);
-        $res = array ();
-        $res["result"] = $rowsAffected;
-        echo json_encode($res);
-
+		if ($loggedInUser == $user && $regnSession->hasReducedWriteAccess()) {
+			$accUsers = new User($db);
+			$rowsAffected = $accUsers->updatePassword($user, $password);
+			$res["result"] = $rowsAffected;
+		} else {
+			$regnSession->checkWriteAccess();
+			$accUsers = new User($db);
+			$rowsAffected = $accUsers->save($user, $password, $person, $readonly, $reducedwrite);
+			$res["result"] = $rowsAffected;
 		}
+
+		echo json_encode($res);
+		break;
+	case "delete" :
+		$regnSession->checkWriteAccess();
+		$accUsers = new User($db);
+		$rowsAffected = $accUsers->delete($user);
+		$res = array ();
+		$res["result"] = $rowsAffected;
+		echo json_encode($res);
+
+}
 ?>
