@@ -1,6 +1,5 @@
 <?php
 
-
 class AppConfig {
 
 const DB_HOST_NAME="localhost";
