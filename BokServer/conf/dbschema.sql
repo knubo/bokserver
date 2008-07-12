@@ -1,37 +1,57 @@
-create table bok_author(
+create table IF NOT EXISTS bok_person(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-); 
-
-create table bok_translator(
-  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-); 
-
-create table bok_illustrator(
-  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-); 
-
-create table bok_book(
-  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  firstname varchar(40),
+  lastname varchar(40),
+  illustrator tinyint,
+  translator tinyint,
+  author tinyint,
+  editor tinyint
 );
 
-create table book_owner(
+create table IF NOT EXISTS book_publisher(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  book_id INTEGER(8) UNSIGNED,
-  username 
-)
-
-create table book_placement(
-  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-); 
-
-create table book_category(
-  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name varchar(40)
 );
 
-create table book_owner(
+create table IF NOT EXISTS book_subtitle(
   book_id INTEGER(8) UNSIGNED,
-  user_id INTEGER(8) UNSIGNED
-  );
+  number INTEGER(2) UNSIGNED,
+  title varchar(40)
+);
+
+create table IF NOT EXISTS bok_book(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  usernumber INTEGER(8),
+  title varchar(40),
+  org_title varchar(40),
+  ISBN varchar(40),
+  author_id INTEGER(8) UNSIGNED,
+  coauthor_id INTEGER(8) UNSIGNED,
+  illustrator_id INTEGER(8) UNSIGNED,
+  translator_id INTEGER(8) UNSIGNED,
+  editor_id INTEGER(8) UNSIGNED,
+  publisher_id INTEGER(8) UNSIGNED,
+  price NUMERIC(8,2) UNSIGNED,
+  published_year INTEGER(4) UNSIGNED,
+  written_year INTEGER(4) UNSIGNED,
+  category_id INTEGER(4) UNSIGNED,
+  placement_id INTEGER(8) UNSIGNED,
+  edition INTEGER(4) UNSIGNED,
+  impression INTEGER(4) UNSIGNED,
+  series varchar(40),
+  number_in_series INTEGER(4) UNSIGNED
+);
+
+create table IF NOT EXISTS book_placement(
+  id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  placement varchar(40) UNIQUE,
+  text varchar(40)
+); 
+
+create table IF NOT EXISTS book_category(
+  id INTEGER(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name varchar(25) UNIQUE
+);
 
 create table if not exists bok_log(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -41,7 +61,6 @@ create table if not exists bok_log(
   action varchar(10),
   message TEXT
 );
-
 
 create table if not exists bok_user(
   username varchar(25) UNIQUE,
