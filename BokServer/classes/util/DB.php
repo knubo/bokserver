@@ -71,6 +71,8 @@ class DB {
 		if (!$mysqli) {
             $this->report_error();
 		}
+		
+		//echo "HUFF:$query";
 
 		return new PrepWrapper($mysqli, $this);
 	}

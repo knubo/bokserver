@@ -2,11 +2,17 @@ create table IF NOT EXISTS bok_person(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   firstname varchar(40),
   lastname varchar(40),
+  search1 varchar(80),
+  search2 varchar(80),
   illustrator tinyint,
   translator tinyint,
   author tinyint,
   editor tinyint
 );
+
+
+CREATE INDEX search1index USING RTREE ON bok_person (search1);
+CREATE INDEX search2index USING RTREE ON bok_person (search2);
 
 create table IF NOT EXISTS book_publisher(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
