@@ -1,10 +1,5 @@
 <?php
 
-
-/*
- * Created on Jul 16, 2007
- *
- */
 include_once ("../../conf/AppConfig.php");
 include_once ("../../classes/util/DB.php");
 include_once ("../../classes/auth/User.php");
