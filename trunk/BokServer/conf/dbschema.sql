@@ -19,16 +19,11 @@ create table IF NOT EXISTS book_publisher(
   name varchar(40)
 );
 
-create table IF NOT EXISTS book_subtitle(
-  book_id INTEGER(8) UNSIGNED,
-  number INTEGER(2) UNSIGNED,
-  title varchar(40)
-);
-
 create table IF NOT EXISTS bok_book(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   usernumber INTEGER(8),
   title varchar(40),
+  subtitle TEXT,
   org_title varchar(40),
   ISBN varchar(40),
   author_id INTEGER(8) UNSIGNED,
