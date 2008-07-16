@@ -45,8 +45,8 @@ create table IF NOT EXISTS bok_book(
 
 create table IF NOT EXISTS book_placement(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  placement varchar(40) UNIQUE,
-  text varchar(40)
+  placement varchar(20) UNIQUE,
+  info varchar(20)
 ); 
 
 create table IF NOT EXISTS book_category(
