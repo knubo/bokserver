@@ -11,10 +11,10 @@ create table IF NOT EXISTS bok_person(
 );
 
 
-CREATE INDEX search1index USING RTREE ON bok_person (search1);
-CREATE INDEX search2index USING RTREE ON bok_person (search2);
+CREATE INDEX search1index USING BTREE ON bok_person (search1);
+CREATE INDEX search2index USING BTREE ON bok_person (search2);
 
-create table IF NOT EXISTS book_publisher(
+create table IF NOT EXISTS bok_publisher(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name varchar(40)
 );
@@ -43,13 +43,13 @@ create table IF NOT EXISTS bok_book(
   number_in_series INTEGER(4) UNSIGNED
 );
 
-create table IF NOT EXISTS book_placement(
+create table IF NOT EXISTS bok_placement(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   placement varchar(20) UNIQUE,
   info varchar(20)
 ); 
 
-create table IF NOT EXISTS book_category(
+create table IF NOT EXISTS bok_category(
   id INTEGER(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name varchar(25) UNIQUE
 );
