@@ -2,7 +2,7 @@
 class Placement {
 	private $db;
 
-	function Category($dbi) {
+	function Placement($dbi) {
 		$this->db = $dbi;
 	}
 
