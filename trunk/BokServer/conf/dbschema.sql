@@ -54,6 +54,11 @@ create table IF NOT EXISTS bok_category(
   name varchar(25) UNIQUE
 );
 
+create table IF NOT EXISTS bok_serie(
+  id INTEGER(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name varchar(40) UNIQUE
+);
+
 create table if not exists bok_log(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   occured TIMESTAMP,
