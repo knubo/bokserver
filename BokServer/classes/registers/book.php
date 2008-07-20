@@ -54,12 +54,12 @@ class Book {
 
 		
 		if ($data["id"] > 0) {
+			$this->checkDuplicate($data["usernumber"], $data["id"]);
 			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, coauthor_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=? where id=?");
 			$prep->bind_params("issssiiiiiisiiiiiiisi", $data["usernumber"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["coauthor_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["id"]);
 			$prep->execute();
 			return $this->get($data["id"]);
 		}
-		$this->checkDuplicate($data["usernumber"], $data["id"]);
 
 		$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "book set usernumber=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, coauthor_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?");
 		$prep->bind_params("issssiiiiiisiiiiiiis", $data["usernumber"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["coauthor_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"]);
