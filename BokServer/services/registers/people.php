@@ -10,12 +10,6 @@ $id = array_key_exists("id", $_REQUEST) ? $_REQUEST["id"] : null;
 $type = array_key_exists("type", $_REQUEST) ? $_REQUEST["type"] : null;
 $search = array_key_exists("search", $_REQUEST) ? $_REQUEST["search"] : null;
 $limit = array_key_exists("limit", $_REQUEST) ? $_REQUEST["limit"] : null;
-$firstname = array_key_exists("firstname", $_REQUEST) ? $_REQUEST["firstname"] : null;
-$lastname = array_key_exists("lastname", $_REQUEST) ? $_REQUEST["lastname"] : null;
-$editor = array_key_exists("editor", $_REQUEST) ? $_REQUEST["editor"] : null;
-$author = array_key_exists("author", $_REQUEST) ? $_REQUEST["author"] : null;
-$illustrator = array_key_exists("illustrator", $_REQUEST) ? $_REQUEST["illustrator"] : null;
-$translator = array_key_exists("translator", $_REQUEST) ? $_REQUEST["translator"] : null;
 
 $db = new DB();
 $regnSession = new RegnSession($db);
