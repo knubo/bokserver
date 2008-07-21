@@ -20,6 +20,9 @@ switch ($action) {
 	case "search" :
 		echo json_encode($accBook->search($type, $search, $limit));
 		break;
+	case "getfull" :
+		echo json_encode($accBook->getfull($id));
+		break;
 	case "get" :
 		echo json_encode($accBook->get($id));
 		break;
