@@ -7,24 +7,51 @@ class Book {
 	}
 
 	function search($type, $query, $limit) {
-		$query = implode("%", explode(" ", $query)) . "%";
 
 		switch ($type) {
 			case "title" :
+				$query = implode("%", explode(" ", $query)) . "%";
 				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? limit ?");
+				$prep->bind_params("si", $query, $limit);
 				break;
 			case "ISBN" :
+				$query = $query . "%";
 				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? limit ?");
+				$prep->bind_params("si", $query, $limit);
 				break;
-
+			case "usernumber" :
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber = ? limit ?");
+				$prep->bind_params("ii", $query, $limit);
+				break;
 		}
-		$prep->bind_params("si", $query, $limit);
 
 		return $prep->execute();
 	}
 
 	function get($id) {
 		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where id = ?");
+
+		$prep->bind_params("i", $id);
+
+		return array_pop($prep->execute());
+	}
+
+	function getfull($id) {
+		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, ISBN, concat(A.lastname, ', ', A.firstname) as author, " .
+		"concat(CO.lastname, ', ', CO.firstname) as coauthor, concat(I.lastname, ', ', I.firstname) as illustrator, concat(T.lastname, ', ', T.firstname) as translator, " .
+		"concat(E.lastname, ', ', E.firstname) as editor, PUB.name as publisher,price,published_year,written_year,C.name as category, " .
+		"concat(PLA.placement, ' (',PLA.info, ')') as placement,edition,impression,S.name as series,number_in_series from " .
+		AppConfig :: DB_PREFIX . "book B " .
+		"left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "person CO) on (CO.id = coauthor_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "person A) on (A.id = author_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "person E) on (E.id = editor_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "person I) on (I.id = illustrator_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "person T) on (T.id = translator_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "publisher PUB) on (PUB.id = publisher_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "category C) on (C.id = category_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "serie S) on (S.id = series)" .
+		"where B.id = ?");
 
 		$prep->bind_params("i", $id);
 

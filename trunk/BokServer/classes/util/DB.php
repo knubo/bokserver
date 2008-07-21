@@ -66,13 +66,19 @@ class DB {
     }
 
 	function prepare($query) {
+		if(false && strstr($query, "bok_log") === FALSE) {
+			include_once ("logger.php");
+			$log = new Logger($this);
+			$log->log("debug","db", $query);			
+		}
+
+
 		$mysqli = mysqli_prepare($this->link, $query);
 
 		if (!$mysqli) {
             $this->report_error();
 		}
 		
-		//echo "HUFF:$query";
 
 		return new PrepWrapper($mysqli, $this);
 	}
