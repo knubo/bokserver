@@ -35,6 +35,23 @@ class Book {
 
 		return array_pop($prep->execute());
 	}
+	
+	function getfullUserNumber($userNumber) {
+		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where usernumber = ?");
+
+		$prep->bind_params("i", $userNumber);
+
+		$arr = $prep->execute();
+		
+		if(count($arr) == 0) {
+			return $arr;
+		}
+		
+		$one = array_pop($arr);
+		
+		return $this->getfull($one["id"]);
+		
+	}
 
 	function getfull($id) {
 		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, ISBN, concat(A.lastname, ', ', A.firstname) as author, " .
