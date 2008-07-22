@@ -27,6 +27,28 @@ class Book {
 
 		return $prep->execute();
 	}
+	
+	function searchDetailed($data) {
+		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX.
+		"book B left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id)",
+		"order by title");
+		
+		$searchWrap->addAndParam("s", "title", $data["title"]);
+		$searchWrap->addAndParam("s", "ISBN", $data["ISBN"]);
+		$searchWrap->addAndParam("i", "written_year", $data["written_year"]);
+		$searchWrap->addAndOrQuery0("i", "author_id", "coauthor_id", $data["author_id"]);
+		$searchWrap->addAndParam0("i", "editor_id", $data["editor_id"]);
+		$searchWrap->addAndParam0("i", "illustrator_id", $data["illustrator_id"]);
+		$searchWrap->addAndParam0("i", "translator_id", $data["translator_id"]);
+		$searchWrap->addAndParam0("i", "category_id", $data["category_id"]);
+		$searchWrap->addAndParam0("i", "serie", $data["serie"]);
+		$searchWrap->addAndParam0("i", "placement_id", $data["placement_id"]);
+		$searchWrap->addAndParam0("i", "publisher_id", $data["publisher_id"]);
+	
+		return $searchWrap->execute();
+		
+	}
+	
 
 	function get($id) {
 		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where id = ?");
@@ -57,7 +79,7 @@ class Book {
 		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, ISBN, concat(A.lastname, ', ', A.firstname) as author, " .
 		"concat(CO.lastname, ', ', CO.firstname) as coauthor, concat(I.lastname, ', ', I.firstname) as illustrator, concat(T.lastname, ', ', T.firstname) as translator, " .
 		"concat(E.lastname, ', ', E.firstname) as editor, PUB.name as publisher,price,published_year,written_year,C.name as category, " .
-		"concat(PLA.placement, ' (',PLA.info, ')') as placement,edition,impression,S.name as series,number_in_series from " .
+		"concat(PLA.placement, ' ',PLA.info) as placement,edition,impression,S.name as series,number_in_series from " .
 		AppConfig :: DB_PREFIX . "book B " .
 		"left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id) " .
 		"left join (" . AppConfig :: DB_PREFIX . "person CO) on (CO.id = coauthor_id) " .
