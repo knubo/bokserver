@@ -297,6 +297,13 @@ class SearchWrapper {
     	$this->Query .= $sql;
     }
 
+	function addAndParam0($type, $name, $param, $allowNull = 0) {
+		if($param == 0) {
+			return;
+		}
+		$this->addAndParam($type, $name, $param, $allowNull);
+	}
+
 	function addAndParam($type, $name, $param, $allowNull = 0) {
 		if($param == "" && !$allowNull) {
 			return;
@@ -313,6 +320,34 @@ class SearchWrapper {
 			$this->Query .="$name like ?";
 		} else {
 			$this->Query .="$name = ?";
+		}
+	}
+
+	function addAndOrQuery0($type, $name1, $name2, $param, $allowNull = 0) {
+		if($param == 0) {
+			return;
+		}
+		
+		$this->addAndOrQuery($type, $name1, $name2, $param, $allowNull);
+	}
+
+	function addAndOrQuery($type, $name1, $name2, $param, $allowNull = 0) {
+		if($param == "" && !$allowNull) {
+			return;
+		}
+
+		$this->Type .=$type.$type;
+
+		if(sizeof($this->Params) > 0) {
+			$this->Query .=" and ";
+		}
+
+		$this->Params[] = $param;
+		$this->Params[] = $param;
+		if($type == "s") {
+			$this->Query .="($name1 like ? or name2 like ?)";
+		} else {
+			$this->Query .="($name1 = ? or $name2 = ?)";
 		}
 	}
 

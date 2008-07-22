@@ -21,6 +21,10 @@ switch ($action) {
 	case "search" :
 		echo json_encode($accBook->search($type, $search, $limit));
 		break;
+	case "detailedsearch" :
+		$result = $accBook->searchDetailed($_REQUEST);
+		include("../../renders/booksearch.php");
+		break;
 	case "getfullusernumber" :
 		break;
 	case "getfull" :
