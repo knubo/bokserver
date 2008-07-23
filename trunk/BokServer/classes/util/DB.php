@@ -374,7 +374,7 @@ class SearchWrapper {
 				$sql = $this->Prequery. " ".$this->OuterJoin." ".$this->SqlWhere." ".$this->OrderBy;			
 			}
 			
-			if(true && strstr($sql, "bok_log") === FALSE) {
+			if(false && strstr($sql, "bok_log") === FALSE) {
 				include_once ("logger.php");
 				$log = new Logger($this->Db);
 				$log->log("debug","db", $sql);			
