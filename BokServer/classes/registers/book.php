@@ -11,12 +11,12 @@ class Book {
 		switch ($type) {
 			case "title" :
 				$query = implode("%", explode(" ", $query)) . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? limit ?");
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit ?");
 				$prep->bind_params("si", $query, $limit);
 				break;
 			case "ISBN" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? limit ?");
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? and usernumber is not null limit ?");
 				$prep->bind_params("si", $query, $limit);
 				break;
 			case "usernumber" :
@@ -44,6 +44,7 @@ class Book {
 		$searchWrap->addAndParam0("i", "serie", $data["serie"]);
 		$searchWrap->addAndParam0("i", "placement_id", $data["placement_id"]);
 		$searchWrap->addAndParam0("i", "publisher_id", $data["publisher_id"]);
+		$searchWrap->addOnlySql("(usernumber is not null)");
 	
 		return $searchWrap->execute();
 		
@@ -152,6 +153,14 @@ class Book {
 		$prep->bind_params("issssiiiiiisiiiiiiis", $data["usernumber"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["coauthor_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"]);
 		$prep->execute();
 		return $this->get($this->db->insert_id());
+	}
+	
+	function delete($id) {
+		$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=null where id = ?");
+		$prep->bind_params("i", $id);
+		$prep->execute();
+		
+		return array("result"=>"1");
 	}
 
 	function nextUserNumber() {

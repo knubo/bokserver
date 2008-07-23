@@ -368,7 +368,19 @@ class SearchWrapper {
 
 	function execute() {
 		if(sizeof($this->Params) == 0) {
-			$sql = $this->Prequery. " ".$this->OuterJoin." ".$this->SqlWhere." ".$this->OrderBy;
+			if($this->Query) {
+				$sql = $this->Prequery. " ".$this->OuterJoin." where ".$this->Query." ".$this->SqlWhere." ".$this->OrderBy;							
+			} else {
+				$sql = $this->Prequery. " ".$this->OuterJoin." ".$this->SqlWhere." ".$this->OrderBy;			
+			}
+			
+			if(true && strstr($sql, "bok_log") === FALSE) {
+				include_once ("logger.php");
+				$log = new Logger($this->Db);
+				$log->log("debug","db", $sql);			
+			}
+			
+			
 			$prep = $this->Db->prepare($sql);
 			return $prep->execute();
 		}

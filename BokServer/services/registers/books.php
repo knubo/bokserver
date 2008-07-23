@@ -18,6 +18,10 @@ $loggedInUser = $regnSession->auth();
 $accBook = new Book($db);
 
 switch ($action) {
+	case "delete":
+		echo json_encode($accBook->delete($id));
+		break;
+	
 	case "search" :
 		echo json_encode($accBook->search($type, $search, $limit));
 		break;
