@@ -25,8 +25,6 @@ switch ($action) {
 		$result = $accBook->searchDetailed($_REQUEST);
 		include("../../renders/booksearch.php");
 		break;
-	case "getfullusernumber" :
-		break;
 	case "getfull" :
 		if($userNumber > 0) {
 			echo json_encode($accBook->getfullUserNumber($userNumber));

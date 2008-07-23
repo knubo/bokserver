@@ -1,4 +1,4 @@
-<table class="searchresult">
+<table class="searchresult" id="searchTable">
 <tr><th>Boknummer</th><th>Tittel</th><th>ISBN</th><th>Plassering</th></tr>
 <?php
 $row = 0;
@@ -6,7 +6,7 @@ foreach($result as $one) {
 	$class = (($row % 6) < 3) ? "line1" : "line2";
 	$row++; 	
 ?>
-<tr class="<?=$class?>">
+<tr class="<?=$class?>" id="row<?=$one["id"]?>">
   <td><?=$one["usernumber"]?></td>
   <td><?=$one["title"]?></td>
   <td><?=$one["ISBN"]?></td>
