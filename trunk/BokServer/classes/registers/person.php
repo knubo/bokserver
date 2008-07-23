@@ -6,6 +6,14 @@ class Person {
 		$this->db = $dbi;
 	}
 
+	function searchDetailed($data) {
+		$searchWrap = $this->db->search("select * from " . AppConfig :: DB_PREFIX . "person B", "order by lastname");
+		$searchWrap->addAndParam("s", "firstname", $data["firstname"]);
+		$searchWrap->addAndParam("s", "lastname", $data["lastname"]);
+		
+		return $searchWrap->execute();
+	}
+
 	function search($type, $query, $limit) {
 		$query = implode("%", explode(" ", $query)) . "%";
 
@@ -34,7 +42,7 @@ class Person {
 			case "E" :
 				$sql .= "editor = 1";
 				break;
-				}
+		}
 		$prep = $this->db->prepare("$sql limit ?");
 
 		$prep->bind_params("ssi", $query, $query, $limit);
@@ -61,16 +69,18 @@ class Person {
 		if (count($res) == 0) {
 			return;
 		}
-		
+
 		header("HTTP/1.0 513 Validation Error");
 
-		$fields = array ("duplicate");
+		$fields = array (
+			"duplicate"
+		);
 		die(json_encode($fields));
 	}
 
 	function save($data) {
-		$search1 = $data["firstname"]." ".$data["lastname"];
-		$search2 = $data["lastname"]. " ".$data["firstname"];
+		$search1 = $data["firstname"] . " " . $data["lastname"];
+		$search2 = $data["lastname"] . " " . $data["firstname"];
 
 		if ($data["id"] > 0) {
 			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, search1=?, search2=? where id = ?");
