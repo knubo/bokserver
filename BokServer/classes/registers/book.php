@@ -76,10 +76,10 @@ class Book {
 	}
 
 	function getfull($id) {
-		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, ISBN, concat(A.lastname, ', ', A.firstname) as author, " .
-		"concat(CO.lastname, ', ', CO.firstname) as coauthor, concat(I.lastname, ', ', I.firstname) as illustrator, concat(T.lastname, ', ', T.firstname) as translator, " .
-		"concat(E.lastname, ', ', E.firstname) as editor, PUB.name as publisher,price,published_year,written_year,C.name as category, " .
-		"concat(PLA.placement, ' ',PLA.info) as placement,edition,impression,S.name as series,number_in_series from " .
+		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, ISBN, concat(A.lastname, ', ', A.firstname) as author, A.id as author_id, " .
+		"concat(CO.lastname, ', ', CO.firstname) as coauthor, CO.id as coauthor_id, concat(I.lastname, ', ', I.firstname) as illustrator, I.id as illustrator_id, concat(T.lastname, ', ', T.firstname) as translator, T.id as translator_id,  " .
+		"concat(E.lastname, ', ', E.firstname) as editor, E.id as editor_id, PUB.name as publisher, PUB.id as publisher_id,price,published_year,written_year,C.name as category, C.id as category_id, " .
+		"concat(PLA.placement, ' ',PLA.info) as placement, PLA.id as placement_id,edition,impression,S.name as series, S.id as series_id,number_in_series from " .
 		AppConfig :: DB_PREFIX . "book B " .
 		"left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id) " .
 		"left join (" . AppConfig :: DB_PREFIX . "person CO) on (CO.id = coauthor_id) " .
