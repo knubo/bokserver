@@ -1,4 +1,4 @@
-<table class="searchresult" id="searchTable">
+<table class="searchresult">
 <tr><th>Boknummer</th><th>Tittel</th><th>ISBN</th><th>Plassering</th></tr>
 <?php
 $row = 0;

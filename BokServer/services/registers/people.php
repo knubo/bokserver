@@ -17,6 +17,11 @@ $loggedInUser = $regnSession->auth();
 $accPerson = new Person($db);
 
 switch ($action) {
+	case "detailedsearch":
+		$result = $accPerson->searchDetailed($_REQUEST);
+		include("../../renders/personsearch.php");
+		break;
+		
 	case "search" :
 		echo json_encode($accPerson->search($type, $search, $limit));
 		break;
