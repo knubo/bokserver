@@ -30,6 +30,7 @@ switch ($action) {
 		echo json_encode($accSerie->get($id));
 		break;
 	case "save" :
+		$regnSession->checkWriteAccess();		
 		echo json_encode($accSerie->save($_REQUEST));
 		break;
 

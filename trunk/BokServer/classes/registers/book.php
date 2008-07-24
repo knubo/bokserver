@@ -177,5 +177,14 @@ class Book {
 
 		return $data;
 	}
+	
+	function bookCount() {
+		$prep = $this->db->prepare("select count(*) as c from " . AppConfig :: DB_PREFIX . "book where usernumber is not null");
+		$res = $prep->execute();
+
+		$data = array_pop($res);
+		
+		return $data["c"];
+	}
 }
 ?>

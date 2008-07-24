@@ -5,7 +5,6 @@ class Serie extends Base {
 		$this->db = $dbi;
 		$this->table = "serie";
 	}
-
 }
 
 ?>

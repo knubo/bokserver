@@ -19,6 +19,7 @@ $accBook = new Book($db);
 
 switch ($action) {
 	case "delete":
+		$regnSession->checkWriteAccess();
 		echo json_encode($accBook->delete($id));
 		break;
 	
@@ -40,6 +41,7 @@ switch ($action) {
 		echo json_encode($accBook->get($id));
 		break;
 	case "save" :
+		$regnSession->checkWriteAccess();
 		echo json_encode($accBook->save($_REQUEST));
 		break;
 	case "nextUserNumber" :

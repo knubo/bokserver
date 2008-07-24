@@ -99,7 +99,11 @@ class Person {
 		} else {
 			return $this->get($this->db->insert_id());
 		}
-
+	}
+	
+	function summary() {
+	   $prep = $this->db->prepare("select count(*) as c,illustrator,translator,author,editor from bok_person group by illustrator, translator, author, editor");
+	   return $prep->execute();	
 	}
 }
 ?>
