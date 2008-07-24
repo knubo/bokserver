@@ -18,6 +18,11 @@ $loggedInUser = $regnSession->auth();
 $accSerie = new Serie($db);
 
 switch ($action) {
+	case "detailedsearch" :
+		$result = $accSerie->search($type, $search, 10000);
+		include ("../../renders/seriesearch.php");
+		break;
+
 	case "search" :
 		echo json_encode($accSerie->search($type, $search, $limit));
 		break;

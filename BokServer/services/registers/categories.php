@@ -18,6 +18,11 @@ $loggedInUser = $regnSession->auth();
 $accCategory = new Category($db);
 
 switch ($action) {
+	case "detailedsearch" :
+		$result = $accCategory->search($type, $search, 10000);
+		include ("../../renders/categorysearch.php");
+		break;
+
 	case "search" :
 		echo json_encode($accCategory->search($type, $search, $limit));
 		break;

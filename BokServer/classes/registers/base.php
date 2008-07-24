@@ -1,6 +1,7 @@
 <?php
 class Base {
 	protected $table;
+	protected $field;
 	protected $db;
 
 	function search($type, $query, $limit) {
