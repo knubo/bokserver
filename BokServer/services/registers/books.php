@@ -7,7 +7,7 @@ include_once ("../../classes/registers/book.php");
 
 $id = array_key_exists("id", $_REQUEST) ? $_REQUEST["id"] : null;
 $userNumber = array_key_exists("userNumber", $_REQUEST) ? $_REQUEST["userNumber"] : 0;
-$action = array_key_exists("action", $_REQUEST) ? $_REQUEST["action"] : "";
+$action = array_key_exists("action", $_REQUEST) ? $_REQUEST["action"] : "placementSummary";
 $type = array_key_exists("type", $_REQUEST) ? $_REQUEST["type"] : null;
 $search = array_key_exists("search", $_REQUEST) ? $_REQUEST["search"] : null;
 $limit = array_key_exists("limit", $_REQUEST) ? $_REQUEST["limit"] : null;
@@ -18,20 +18,20 @@ $loggedInUser = $regnSession->auth();
 $accBook = new Book($db);
 
 switch ($action) {
-	case "delete":
+	case "delete" :
 		$regnSession->checkWriteAccess();
 		echo json_encode($accBook->delete($id));
 		break;
-	
+
 	case "search" :
 		echo json_encode($accBook->search($type, $search, $limit));
 		break;
 	case "detailedsearch" :
 		$result = $accBook->searchDetailed($_REQUEST);
-		include("../../renders/booksearch.php");
+		include ("../../renders/booksearch.php");
 		break;
 	case "getfull" :
-		if($userNumber > 0) {
+		if ($userNumber > 0) {
 			echo json_encode($accBook->getfullUserNumber($userNumber));
 		} else {
 			echo json_encode($accBook->getfull($id));
@@ -47,5 +47,14 @@ switch ($action) {
 	case "nextUserNumber" :
 		echo json_encode($accBook->nextUserNumber());
 		break;
+	case "top30authors" :
+		$result = $accBook->top30Authors();
+		include ("../../renders/report_authors.php");
+		break;
+	case "placementSummary":
+		$result = $accBook->placementSummary();
+		include ("../../renders/report_placement.php");
+		break;
+		
 }
 ?>

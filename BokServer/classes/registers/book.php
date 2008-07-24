@@ -186,5 +186,18 @@ class Book {
 		
 		return $data["c"];
 	}
+	
+	function top30Authors() {
+		$prep = $this->db->prepare("select count(*) as bookcount,P.lastname,P.firstname from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "person P where B.author_id = P.id and B.usernumber is not null group by author_id order by bookcount DESC limit 30");
+		$res = $prep->execute();
+		return $res;		
+	}
+	
+	function placementSummary() {
+		$prep = $this->db->prepare("select count(*) as bookcount,P.placement from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "placement P where B.placement_id = P.id and B.usernumber is not null group by placement_id order by placement");
+		$res = $prep->execute();
+		return $res;		
+	}
+	
 }
 ?>
