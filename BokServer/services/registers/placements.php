@@ -29,6 +29,7 @@ switch ($action) {
 		echo json_encode($accPlacement->get($id));
 		break;
 	case "save" :
+		$regnSession->checkWriteAccess();		
 		echo json_encode($accPlacement->save($_REQUEST));
 		break;
 
