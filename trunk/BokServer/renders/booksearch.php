@@ -1,5 +1,5 @@
 <table class="searchresult">
-<tr><th>Plassering</th><th>Info</th></tr>
+<tr><th>Boknummer</th><th>Tittel</th><th>ISBN</th><th>Plassering</th></tr>
 <?php
 $row = 0;
 foreach($result as $one) {
@@ -7,9 +7,11 @@ foreach($result as $one) {
 	$row++; 	
 ?>
 <tr class="<?=$class?>" id="row<?=$one["id"]?>">
-  <td><?=$one["placement"]?></td>
-  <td><?=$one["info"]?></td>
-</tr>
+  <td><?=$one["usernumber"]?></td>
+  <td><?=$one["title"]?></td>
+  <td><?=$one["ISBN"]?></td>
+  <td><?=$one["placement"]?></td></tr>
+
 <?php
 }
 ?>
