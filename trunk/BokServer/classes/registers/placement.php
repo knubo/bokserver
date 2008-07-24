@@ -38,6 +38,10 @@ class Placement extends Base {
 
 	function save($data) {
 
+		if(!array_key_exists("info", $data)) {
+			$data["info"] = "";	
+		}
+
 		if ($data["id"] > 0) {
 			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "placement set placement=?,info=? where id = ?");
 			$prep->bind_params("ssi", $data["placement"], $data["info"], $data["id"]);

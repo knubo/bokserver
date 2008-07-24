@@ -18,6 +18,12 @@ $loggedInUser = $regnSession->auth();
 $accPublisher = new Publisher($db);
 
 switch ($action) {
+
+	case "detailedsearch" :
+		$result = $accPublisher->search($type, $search, 10000);
+		include ("../../renders/publishersearch.php");
+		break;
+
 	case "search" :
 		echo json_encode($accPublisher->search($type, $search, $limit));
 		break;

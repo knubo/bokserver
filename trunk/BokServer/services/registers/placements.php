@@ -18,6 +18,10 @@ $loggedInUser = $regnSession->auth();
 $accPlacement = new Placement($db);
 
 switch ($action) {
+	case "detailedsearch" :
+		$result = $accPlacement->search($type, $search, 10000);
+		include("../../renders/placementsearch.php");
+		break;
 	case "search" :
 		echo json_encode($accPlacement->search($type, $search, $limit));
 		break;
