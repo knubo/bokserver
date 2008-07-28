@@ -7,7 +7,7 @@ class Base {
 	function search($type, $query, $limit) {
 		$query = "$query%";
 
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . $this->table . " where name like ? limit ?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . $this->table . " where name like ? order by name limit ?");
 
 		$prep->bind_params("si", $query, $limit);
 

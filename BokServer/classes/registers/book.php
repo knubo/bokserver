@@ -9,6 +9,11 @@ class Book {
 	function search($type, $query, $limit) {
 
 		switch ($type) {
+			case "coauthor":
+				$query = $query . "%";
+				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit ?");
+				$prep->bind_params("si", $query, $limit);
+				break;
 			case "title" :
 				$query = implode("%", explode(" ", $query)) . "%";
 				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit ?");
@@ -34,13 +39,15 @@ class Book {
 		"order by title");
 		
 		$searchWrap->addAndParam("s", "title", $data["title"]);
+		$searchWrap->addAndParam("s", "coauthor", $data["coauthor"]);
 		$searchWrap->addAndParam("s", "ISBN", $data["ISBN"]);
 		$searchWrap->addAndParam("i", "written_year", $data["written_year"]);
-		$searchWrap->addAndOrQuery0("i", "author_id", "coauthor_id", $data["author_id"]);
+		$searchWrap->addAndParam0("i", "author_id", $data["author_id"]);
 		$searchWrap->addAndParam0("i", "editor_id", $data["editor_id"]);
 		$searchWrap->addAndParam0("i", "illustrator_id", $data["illustrator_id"]);
 		$searchWrap->addAndParam0("i", "translator_id", $data["translator_id"]);
 		$searchWrap->addAndParam0("i", "category_id", $data["category_id"]);
+		$searchWrap->addAndParam0("i", "ready_by_id", $data["read_by_id"]);
 		$searchWrap->addAndParam0("i", "serie", $data["serie"]);
 		$searchWrap->addAndParam0("i", "placement_id", $data["placement_id"]);
 		$searchWrap->addAndParam0("i", "publisher_id", $data["publisher_id"]);
@@ -77,13 +84,13 @@ class Book {
 	}
 
 	function getfull($id) {
-		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, ISBN, concat(A.lastname, ', ', A.firstname) as author, A.id as author_id, " .
-		"concat(CO.lastname, ', ', CO.firstname) as coauthor, CO.id as coauthor_id, concat(I.lastname, ', ', I.firstname) as illustrator, I.id as illustrator_id, concat(T.lastname, ', ', T.firstname) as translator, T.id as translator_id,  " .
+		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, coauthor, ISBN, concat(A.lastname, ', ', A.firstname) as author, A.id as author_id, " .
+		"concat(R.lastname, ', ', R.firstname) as readby, B.read_by_id, concat(I.lastname, ', ', I.firstname) as illustrator, I.id as illustrator_id, concat(T.lastname, ', ', T.firstname) as translator, T.id as translator_id,  " .
 		"concat(E.lastname, ', ', E.firstname) as editor, E.id as editor_id, PUB.name as publisher, PUB.id as publisher_id,price,published_year,written_year,C.name as category, C.id as category_id, " .
 		"concat(PLA.placement, ' ',PLA.info) as placement, PLA.id as placement_id,edition,impression,S.name as series, S.id as series_id,number_in_series from " .
 		AppConfig :: DB_PREFIX . "book B " .
 		"left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "person CO) on (CO.id = coauthor_id) " .
+		"left join (" . AppConfig :: DB_PREFIX . "person R) on (R.id = read_by_id) " .
 		"left join (" . AppConfig :: DB_PREFIX . "person A) on (A.id = author_id) " .
 		"left join (" . AppConfig :: DB_PREFIX . "person E) on (E.id = editor_id) " .
 		"left join (" . AppConfig :: DB_PREFIX . "person I) on (I.id = illustrator_id) " .
@@ -119,8 +126,8 @@ class Book {
 	}
 
 	function save($data) {
-		if ($data["coauthor_id"] == 0) {
-			$data["coauthor_id"] = null;
+		if ($data["read_by_id"] == 0) {
+			$data["read_by_id"] = null;
 		}
 		if ($data["illustrator_id"] == 0) {
 			$data["illustrator_id"] = null;
@@ -143,14 +150,14 @@ class Book {
 
 		if ($data["id"] > 0) {
 			$this->checkDuplicate($data["usernumber"], $data["id"]);
-			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, coauthor_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=? where id=?");
-			$prep->bind_params("issssiiiiiisiiiiiiisi", $data["usernumber"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["coauthor_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["id"]);
+			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?,coauthor=? where id=?");
+			$prep->bind_params("isssssiiiiiisiiiiiiissi", $data["usernumber"], $data["subbook"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["read_by_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["coauthor"], $data["id"]);
 			$prep->execute();
 			return $this->get($data["id"]);
 		}
 
-		$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "book set usernumber=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, coauthor_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?");
-		$prep->bind_params("issssiiiiiisiiiiiiis", $data["usernumber"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["coauthor_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"]);
+		$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?, coauthor=?");
+		$prep->bind_params("isssssiiiiiisiiiiiiiss", $data["usernumber"], $data["subbook"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["read_by_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["coauthor"]);
 		$prep->execute();
 		return $this->get($this->db->insert_id());
 	}
