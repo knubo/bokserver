@@ -9,7 +9,7 @@ class Book {
 	function search($type, $query, $limit) {
 
 		switch ($type) {
-			case "coauthor":
+			case "coauthor" :
 				$query = $query . "%";
 				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit ?");
 				$prep->bind_params("si", $query, $limit);
@@ -34,10 +34,9 @@ class Book {
 	}
 	
 	function searchDetailed($data) {
-		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX.
-		"book B left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id)",
-		"order by title");
-		
+		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX .
+		"book B left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id)", "order by title");
+
 		$searchWrap->addAndParam("s", "title", $data["title"]);
 		$searchWrap->addAndParam("s", "coauthor", $data["coauthor"]);
 		$searchWrap->addAndParam("s", "usernumber", $data["usernumber"]);
@@ -53,11 +52,10 @@ class Book {
 		$searchWrap->addAndParam0("i", "placement_id", $data["placement_id"]);
 		$searchWrap->addAndParam0("i", "publisher_id", $data["publisher_id"]);
 		$searchWrap->addOnlySql("(usernumber is not null)");
-	
+
 		return $searchWrap->execute();
-		
+
 	}
-	
 
 	function get($id) {
 		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where id = ?");
@@ -66,26 +64,26 @@ class Book {
 
 		return array_pop($prep->execute());
 	}
-	
+
 	function getfullUserNumber($userNumber) {
 		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where usernumber = ?");
 
 		$prep->bind_params("i", $userNumber);
 
 		$arr = $prep->execute();
-		
-		if(count($arr) == 0) {
+
+		if (count($arr) == 0) {
 			return $arr;
 		}
-		
+
 		$one = array_pop($arr);
-		
+
 		return $this->getfull($one["id"]);
-		
+
 	}
 
 	function getfull($id) {
-		$prep = $this->db->prepare("select usernumber, title, subtitle, org_title, coauthor, ISBN, concat(A.lastname, ', ', A.firstname) as author, A.id as author_id, " .
+		$prep = $this->db->prepare("select B.id, subbook, usernumber, title, subtitle, org_title, coauthor, ISBN, concat(A.lastname, ', ', A.firstname) as author, A.id as author_id, " .
 		"concat(R.lastname, ', ', R.firstname) as readby, B.read_by_id, concat(I.lastname, ', ', I.firstname) as illustrator, I.id as illustrator_id, concat(T.lastname, ', ', T.firstname) as translator, T.id as translator_id,  " .
 		"concat(E.lastname, ', ', E.firstname) as editor, E.id as editor_id, PUB.name as publisher, PUB.id as publisher_id,price,published_year,written_year,C.name as category, C.id as category_id, " .
 		"concat(PLA.placement, ' ',PLA.info) as placement, PLA.id as placement_id,edition,impression,S.name as series, S.id as series_id,number_in_series from " .
@@ -162,13 +160,15 @@ class Book {
 		$prep->execute();
 		return $this->get($this->db->insert_id());
 	}
-	
+
 	function delete($id) {
 		$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=null where id = ?");
 		$prep->bind_params("i", $id);
 		$prep->execute();
-		
-		return array("result"=>"1");
+
+		return array (
+			"result" => "1"
+		);
 	}
 
 	function nextUserNumber() {
@@ -185,27 +185,33 @@ class Book {
 
 		return $data;
 	}
-	
+
 	function bookCount() {
 		$prep = $this->db->prepare("select count(*) as c from " . AppConfig :: DB_PREFIX . "book where usernumber is not null");
 		$res = $prep->execute();
 
 		$data = array_pop($res);
-		
+
 		return $data["c"];
 	}
-	
+
 	function top30Authors() {
 		$prep = $this->db->prepare("select count(*) as bookcount,P.lastname,P.firstname from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "person P where B.author_id = P.id and B.usernumber is not null group by author_id order by bookcount DESC limit 30");
 		$res = $prep->execute();
-		return $res;		
+		return $res;
 	}
-	
+
+	function noPlacement() {
+		$prep = $this->db->prepare("select title, ISBN, usernumber,B.id as id, concat(PLA.lastname, ' ',PLA.firstname) as author from " . AppConfig :: DB_PREFIX .
+		"book B left join (" . AppConfig :: DB_PREFIX . "person PLA) on (PLA.id=author_id) where placement_id is null order by title");
+		return $prep->execute();
+	}
+
 	function placementSummary() {
 		$prep = $this->db->prepare("select count(*) as bookcount,P.placement from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "placement P where B.placement_id = P.id and B.usernumber is not null group by placement_id order by placement");
 		$res = $prep->execute();
-		return $res;		
+		return $res;
 	}
-	
+
 }
 ?>

@@ -51,6 +51,11 @@ switch ($action) {
 		$result = $accBook->top30Authors();
 		include ("../../renders/report_authors.php");
 		break;
+	case "noplacement":
+		$result = $accBook->noPlacement();
+		include ("../../renders/report_no_placement.php");
+		break;
+		
 	case "placementSummary":
 		$result = $accBook->placementSummary();
 		include ("../../renders/report_placement.php");
