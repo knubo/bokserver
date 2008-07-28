@@ -8,8 +8,8 @@ class Person {
 
 	function searchDetailed($data) {
 		$searchWrap = $this->db->search("select * from " . AppConfig :: DB_PREFIX . "person B", "order by lastname");
-		$searchWrap->addAndParam("s", "firstname", $data["firstname"]);
-		$searchWrap->addAndParam("s", "lastname", $data["lastname"]);
+		$searchWrap->addAndParam("s", "firstname", $data["firstname"]."%");
+		$searchWrap->addAndParam("s", "lastname", $data["lastname"]."%");
 		
 		return $searchWrap->execute();
 	}
@@ -42,6 +42,10 @@ class Person {
 			case "E" :
 				$sql .= "editor = 1";
 				break;
+			case "R":
+				$sql .= "reader = 1";
+				break;
+				
 		}
 		$prep = $this->db->prepare("$sql limit ?");
 
@@ -83,13 +87,13 @@ class Person {
 		$search2 = $data["lastname"] . " " . $data["firstname"];
 
 		if ($data["id"] > 0) {
-			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, search1=?, search2=? where id = ?");
-			$prep->bind_params("ssiiiissi", $data["firstname"], $data["lastname"], $data["illustrator"], $data["editor"], $data["author"], $data["translator"], $search1, $search2, $data["id"]);
+			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, reader=?, search1=?, search2=? where id = ?");
+			$prep->bind_params("ssiiiiissi", $data["firstname"], $data["lastname"], $data["illustrator"], $data["editor"], $data["author"], $data["translator"], $data["reader"], $search1, $search2, $data["id"]);
 		} else {
 			$this->checkDuplicate($data["firstname"], $data["lastname"]);
 
-			$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, search1=?, search2=?");
-			$prep->bind_params("ssiiiiss", $data["firstname"], $data["lastname"], $data["illustrator"], $data["editor"], $data["author"], $data["translator"], $search1, $search2);
+			$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, reader=?, search1=?, search2=?");
+			$prep->bind_params("ssiiiiiss", $data["firstname"], $data["lastname"], $data["illustrator"], $data["editor"], $data["author"], $data["translator"], $data["reader"], $search1, $search2);
 
 		}
 		$prep->execute();
@@ -102,7 +106,7 @@ class Person {
 	}
 	
 	function summary() {
-	   $prep = $this->db->prepare("select count(*) as c,illustrator,translator,author,editor from " . AppConfig :: DB_PREFIX . "person group by illustrator, translator, author, editor");
+	   $prep = $this->db->prepare("select count(*) as c,illustrator,translator,author,editor,reader from " . AppConfig :: DB_PREFIX . "person group by illustrator, translator, author, editor,reader");
 	   return $prep->execute();	
 	}
 }

@@ -7,27 +7,31 @@ create table IF NOT EXISTS bok_person(
   illustrator tinyint,
   translator tinyint,
   author tinyint,
-  editor tinyint
+  editor tinyint,
+  reader tinyint
 );
 
+ALTER TABLE bok_person ADD UNIQUE unique_name (firstname , lastname); 
 
 CREATE INDEX search1index USING BTREE ON bok_person (search1);
 CREATE INDEX search2index USING BTREE ON bok_person (search2);
 
 create table IF NOT EXISTS bok_publisher(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name varchar(40)
+  name varchar(40) UNIQUE
 );
 
 create table IF NOT EXISTS bok_book(
   id INTEGER(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   usernumber INTEGER(8),
+  subbook varchar(1),
   title varchar(40),
   subtitle TEXT,
   org_title varchar(40),
   ISBN varchar(40),
+  coauthor varchar(40),
   author_id INTEGER(8) UNSIGNED,
-  coauthor_id INTEGER(8) UNSIGNED,
+  read_by_id INTEGER(8) UNSIGNED,
   illustrator_id INTEGER(8) UNSIGNED,
   translator_id INTEGER(8) UNSIGNED,
   editor_id INTEGER(8) UNSIGNED,

@@ -1,5 +1,5 @@
 <table class="searchresult" id="personsearch">
-<tr><th>Fornavn</th><th>Etternavn</th><th>Forfatter</th><th>Oversetter</th><th>Redakt&oslash;r</th><th>Illustrat&oslash;r</th></tr>
+<tr><th>Fornavn</th><th>Etternavn</th><th>Forfatter</th><th>Oversetter</th><th>Redakt&oslash;r</th><th>Illustrat&oslash;r</th><th>Oppleser</th></tr>
 <?php
 $row = 0;
 foreach($result as $one) {
@@ -12,7 +12,9 @@ foreach($result as $one) {
   <td><?=$one["author"] ? 'f': ' '?></td>
   <td><?=$one["translator"]? 'o': ' '?></td>
   <td><?=$one["editor"]? 'r': ' '?></td>
-  <td><?=$one["illustrator"]? 'i': ' '?></td></tr>
+  <td><?=$one["illustrator"]? 'i': ' '?></td>
+  <td><?=$one["reader"]? 'l': ' '?></td>
+</tr>
 
 <?php
 }
