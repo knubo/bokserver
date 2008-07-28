@@ -40,6 +40,7 @@ class Book {
 		
 		$searchWrap->addAndParam("s", "title", $data["title"]);
 		$searchWrap->addAndParam("s", "coauthor", $data["coauthor"]);
+		$searchWrap->addAndParam("s", "usernumber", $data["usernumber"]);
 		$searchWrap->addAndParam("s", "ISBN", $data["ISBN"]);
 		$searchWrap->addAndParam("i", "written_year", $data["written_year"]);
 		$searchWrap->addAndParam0("i", "author_id", $data["author_id"]);
