@@ -1,5 +1,6 @@
 <?php
 include_once ("../conf/AppConfig.php");
+include_once ("../conf/Version.php");
 include_once ("../classes/auth/User.php");
 include_once ("../classes/registers/book.php");
 include_once ("../classes/registers/person.php");
@@ -21,6 +22,9 @@ $res["people"] = $accPerson->summary();
 
 $nextUserNumber = $accBook->nextUserNumber();
 $res["nextUserNumber"] = $nextUserNumber["nextUserNumber"];
+
+$res["serverversion"] = Version::SERVER_VERSION;
+
 echo json_encode($res);
 
 ?>
