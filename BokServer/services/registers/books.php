@@ -56,6 +56,11 @@ switch ($action) {
 		include ("../../renders/report_no_placement.php");
 		break;
 		
+	case "countByCategory":
+		$result = $accBook->countByCategory();
+		include ("../../renders/report_book_category.php");
+		break;
+		
 	case "placementSummary":
 		$result = $accBook->placementSummary();
 		include ("../../renders/report_placement.php");

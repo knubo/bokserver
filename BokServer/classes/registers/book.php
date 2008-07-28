@@ -34,7 +34,7 @@ class Book {
 	}
 	
 	function searchDetailed($data) {
-		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX .
+		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.subbook, B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX .
 		"book B left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id)", "order by title");
 
 		$searchWrap->addAndParam("s", "title", $data["title"]);
@@ -48,7 +48,7 @@ class Book {
 		$searchWrap->addAndParam0("i", "translator_id", $data["translator_id"]);
 		$searchWrap->addAndParam0("i", "category_id", $data["category_id"]);
 		$searchWrap->addAndParam0("i", "ready_by_id", $data["read_by_id"]);
-		$searchWrap->addAndParam0("i", "serie", $data["serie"]);
+		$searchWrap->addAndParam0("i", "series", $data["series"]);
 		$searchWrap->addAndParam0("i", "placement_id", $data["placement_id"]);
 		$searchWrap->addAndParam0("i", "publisher_id", $data["publisher_id"]);
 		$searchWrap->addOnlySql("(usernumber is not null)");
@@ -187,7 +187,7 @@ class Book {
 	}
 
 	function bookCount() {
-		$prep = $this->db->prepare("select count(*) as c from " . AppConfig :: DB_PREFIX . "book where usernumber is not null");
+		$prep = $this->db->prepare("select count(*) as c from " . AppConfig :: DB_PREFIX . "book where (usernumber is not null and usernumber <> 0)");
 		$res = $prep->execute();
 
 		$data = array_pop($res);
@@ -200,6 +200,14 @@ class Book {
 		$res = $prep->execute();
 		return $res;
 	}
+
+	function countByCategory() {
+		$prep = $this->db->prepare("select count(*) as bookcount,P.name from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "category P where B.category_id = P.id and B.usernumber is not null group by category_id order by bookcount DESC");
+		$res = $prep->execute();
+		return $res;
+	}
+
+
 
 	function noPlacement() {
 		$prep = $this->db->prepare("select title, ISBN, usernumber,B.id as id, concat(PLA.lastname, ' ',PLA.firstname) as author from " . AppConfig :: DB_PREFIX .

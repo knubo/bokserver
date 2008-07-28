@@ -8,7 +8,7 @@ const DB_PASSWORD="";
 const DB_NAME="knubo";
 
 #Set to 1 if you want authentication.
-const USE_AUTHENTICATION=0;
+const USE_AUTHENTICATION=1;
 
 const MYSQLDUMP="/usr/local/mysql/bin/mysqldump";
 

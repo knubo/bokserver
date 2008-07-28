@@ -1,3 +1,4 @@
+Antall treff: <?=count($result)?><br>
 <table class="searchresult">
 <tr><th>Boknummer</th><th>Tittel</th><th>ISBN</th><th>Plassering</th></tr>
 <?php
@@ -7,7 +8,7 @@ foreach($result as $one) {
 	$row++; 	
 ?>
 <tr class="<?=$class?>" id="row<?=$one["id"]?>">
-  <td><?=$one["usernumber"]?></td>
+  <td><?=$one["usernumber"]?><?=$one["subbook"]?></td>
   <td><?=$one["title"]?></td>
   <td><?=$one["ISBN"]?></td>
   <td><?=$one["placement"]?></td></tr>
