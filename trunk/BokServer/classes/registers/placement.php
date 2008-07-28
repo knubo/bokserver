@@ -9,9 +9,9 @@ class Placement extends Base {
 	function search($type, $query, $limit) {
 		$query = "$query%";
 
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "placement where placement like ? limit ?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "placement where placement like ? limit ".addslashes($limit));
 
-		$prep->bind_params("si", $query, $limit);
+		$prep->bind_params("s", $query);
 
 		return $prep->execute();
 	}

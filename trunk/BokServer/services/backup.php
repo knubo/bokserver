@@ -55,7 +55,7 @@ switch ($action) {
         echo json_encode($res);
         break;
 	case "get" :
-        $backupFileName = "backupAccounting".date("m-d-Y").".zip";
+        $backupFileName = "BackupBokbase".date("m-d-Y").".zip";
         header('Content-type: octet-stream');
         header('Content-Disposition: attachment; filename="'.$backupFileName);
         readfile("../backup/backup.zip");
