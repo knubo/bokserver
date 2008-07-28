@@ -18,6 +18,9 @@ $res = array();
 
 $res["bookCount"] = $accBook->bookCount();
 $res["people"] = $accPerson->summary();
+
+$nextUserNumber = $accBook->nextUserNumber();
+$res["nextUserNumber"] = $nextUserNumber["nextUserNumber"];
 echo json_encode($res);
 
 ?>
