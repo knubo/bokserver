@@ -20,8 +20,8 @@ class Person {
 		if (strlen($type) > 1) {
 			$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "person where " .
 			"(search1 like ? or " .
-			" search2 like ?) limit ?");
-			$prep->bind_params("ssi", $query, $query, $limit);
+			" search2 like ?) limit ".addslashes($limit));
+			$prep->bind_params("ss", $query, $query);
 			return $prep->execute();
 		}
 
@@ -47,9 +47,9 @@ class Person {
 				break;
 				
 		}
-		$prep = $this->db->prepare("$sql limit ?");
+		$prep = $this->db->prepare("$sql limit ".addslashes($limit));
 
-		$prep->bind_params("ssi", $query, $query, $limit);
+		$prep->bind_params("ss", $query, $query);
 
 		return $prep->execute();
 	}

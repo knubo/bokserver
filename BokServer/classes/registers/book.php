@@ -11,22 +11,22 @@ class Book {
 		switch ($type) {
 			case "coauthor" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit ?");
-				$prep->bind_params("si", $query, $limit);
+				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit ".addslashes($limit));
+				$prep->bind_params("s", $query);
 				break;
 			case "title" :
 				$query = implode("%", explode(" ", $query)) . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit ?");
-				$prep->bind_params("si", $query, $limit);
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit ".addslashes($limit));
+				$prep->bind_params("s", $query);
 				break;
 			case "ISBN" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? and usernumber is not null limit ?");
-				$prep->bind_params("si", $query, $limit);
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? and usernumber is not null limit ".addslashes($limit));
+				$prep->bind_params("s", $query);
 				break;
 			case "usernumber" :
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber = ? limit ?");
-				$prep->bind_params("ii", $query, $limit);
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber = ? limit ".addslashes($limit));
+				$prep->bind_params("i", $query);
 				break;
 		}
 
