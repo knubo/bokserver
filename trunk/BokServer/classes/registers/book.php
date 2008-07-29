@@ -207,6 +207,11 @@ class Book {
 		return $res;
 	}
 
+	function countBySeries() {
+		$prep = $this->db->prepare("select count(*) as bookcount,P.name from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "serie P where B.series = P.id and B.usernumber is not null group by series order by bookcount DESC");
+		$res = $prep->execute();
+		return $res;
+	}
 
 
 	function noPlacement() {

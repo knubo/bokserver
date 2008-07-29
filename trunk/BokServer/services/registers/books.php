@@ -60,6 +60,12 @@ switch ($action) {
 		$result = $accBook->countByCategory();
 		include ("../../renders/report_book_category.php");
 		break;
+
+	case "countBySeries":
+		$result = $accBook->countBySeries();
+		include ("../../renders/report_book_series.php");
+		break;
+		
 		
 	case "placementSummary":
 		$result = $accBook->placementSummary();
