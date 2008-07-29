@@ -104,6 +104,25 @@ class Book {
 		return array_pop($prep->execute());
 	}
 
+	function checkDuplicateNew($usernumber) {
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber=?");
+
+		$prep->bind_params("i", $usernumber);
+
+		$res = $prep->execute();
+
+		if (count($res) == 0) {
+			return;
+		}
+
+		header("HTTP/1.0 513 Validation Error");
+
+		$fields = array (
+			"usernumber"
+		);
+		die(json_encode($fields));
+	}
+
 	function checkDuplicate($usernumber, $id) {
 
 		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber=? and id <> ?");
@@ -154,6 +173,8 @@ class Book {
 			$prep->execute();
 			return $this->get($data["id"]);
 		}
+		
+		$this->checkDuplicateNew($data["usernumber"]);
 
 		$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?, coauthor=?");
 		$prep->bind_params("isssssiiiiiisiiiiiiiss", $data["usernumber"], $data["subbook"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["read_by_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["coauthor"]);
