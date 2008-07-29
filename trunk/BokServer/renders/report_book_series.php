@@ -1,6 +1,6 @@
-<div class="pageheading">Antall b&oslash;ker per kategori</div>
+<div class="pageheading">Antall b&oslash;ker per serie</div>
 <table class="report">
-<tr><th>Kategori</th><th>Antall</th></tr>
+<tr><th>Serie</th><th>Antall</th></tr>
 <?php
 $row = 0;
 foreach($result as $one) {
