@@ -3,6 +3,10 @@ class Bibsys {
 	function getBookInfo($isbn) {
 		$infoUrl = $this->getInfoUrl($isbn);
 
+		if(!$infoUrl) {
+			return array("failed"=>"1");
+		}
+
 		return $this->getBookData($infoUrl);
 	}
 
@@ -14,7 +18,7 @@ class Bibsys {
 		$result["url"] = $klienturl;
 
 		$data = array ();
-		$cmd = "/usr/local/bin/wget -O- '$url'";
+		$cmd = AppConfig::WGET." -O- '$url'";
 		$res = exec($cmd, & $data);
 
 		$regs = array ();
@@ -30,19 +34,38 @@ class Bibsys {
 			"T1  - " => "title",
 			"A1  - " => "author",
 			"Y1  - " => "written_year",
-			"N1  - " => "note_1",
-			"N2  - " => "note_2",
+			"N1  - " => "note",
+			"N2  - " => "note",
+			"N3  - " => "note",
+			"KW  - " => "note",
+			"N4  - " => "note",
+			"N5  - " => "note",
+			"SP  - " => "note",
 			"PB  - " => "publisher"
 		);
 
 		$result = array ();
 
 		foreach ($info as $line) {
+			if(strlen($line) == 0) {
+				continue;
+			}
 			$k = substr($line, 0, 6);
 			if (!array_key_exists($k, $lookup)) {
 				continue;
 			}
-			$result[$lookup[$k]] = substr($line, 6);
+			
+			if($k == "Y1  - ") {
+				$regs = array();
+				ereg('.*([0-9][0-9][0-9][0-9]).*', $line,& $regs);
+				$result[$lookup[$k]] = $regs[1];
+			} else {
+				if(array_key_exists($lookup[$k], $result)) {
+					$result[$lookup[$k]] .= "<br>".substr($line, 6);					
+				} else {
+					$result[$lookup[$k]] = substr($line, 6);					
+				}
+			}
 		}
 
 		return $result;
@@ -50,7 +73,7 @@ class Bibsys {
 
 	function getInfoUrl($isbn) {
 		$data = array ();
-		$cmd = "/usr/local/bin/wget -O- 'http://ask.bibsys.no/ask/action/result?fid=isbn&term=$isbn'";
+		$cmd = AppConfig::WGET." -O- 'http://ask.bibsys.no/ask/action/result?fid=isbn&term=$isbn'";
 		$res = exec($cmd, & $data);
 
 		$regs = array ();
@@ -60,7 +83,7 @@ class Bibsys {
 				return $regs[1];
 			}
 		}
-
+		return false;
 	}
 }
 ?>

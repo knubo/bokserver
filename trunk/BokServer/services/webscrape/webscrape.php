@@ -1,4 +1,3 @@
-<pre>
 <?php
 include_once ("../../conf/AppConfig.php");
 include_once ("../../classes/auth/User.php");
@@ -7,7 +6,7 @@ include_once ("../../classes/auth/RegnSession.php");
 include_once ("../../classes/webscrape/bibsys.php");
 
 $action = array_key_exists("action", $_REQUEST) ? $_REQUEST["action"] : "bibsys";
-$isbn = array_key_exists("isbn", $_REQUEST) ? $_REQUEST["isbn"] : "9788204112170";
+$isbn = array_key_exists("isbn", $_REQUEST) ? $_REQUEST["isbn"] : "8270342327";
 
 $bibsys = new Bibsys();
 
@@ -22,4 +21,3 @@ switch ($action) {
 		break;
 }
 ?>
-</pre>
