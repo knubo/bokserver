@@ -8,9 +8,10 @@ const DB_PASSWORD="";
 const DB_NAME="knubo";
 
 #Set to 1 if you want authentication.
-const USE_AUTHENTICATION=1;
+const USE_AUTHENTICATION=0;
 
 const MYSQLDUMP="/usr/local/mysql/bin/mysqldump";
+const WGET='/usr/local/bin/wget'; 
 
 #Common db prefix for all database.
 const DB_PREFIX = "bok_";
