@@ -17,10 +17,18 @@ class Bokkilden {
 		$regs = array ();
 		$allRaw = utf8_decode(implode($data, '###'));
 		preg_match("/class=\"bokfaktatabell\">(.*?)<\/table>/", $allRaw, & $regs);
-
 		$info = $this->splitIntoFields($regs[1]);
+
+		preg_match("/ProduktHovedelement.*?>(.*?)<div/", $allRaw, &$regs);
+
+		$this->addTitleAuthor(&$info, &$regs);
+
 		$result["info"] = $info;
 		return $result;
+	}
+	
+	function addTitleAuthor($info, $regs) {
+		$info["title"] = "FOO";
 	}
 
 	function splitIntoFields($one) {

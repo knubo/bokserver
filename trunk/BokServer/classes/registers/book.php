@@ -11,28 +11,28 @@ class Book {
 		switch ($type) {
 			case "coauthor" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit ".addslashes($limit));
+				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit " . addslashes($limit));
 				$prep->bind_params("s", $query);
 				break;
 			case "title" :
 				$query = implode("%", explode(" ", $query)) . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit ".addslashes($limit));
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit " . addslashes($limit));
 				$prep->bind_params("s", $query);
 				break;
 			case "ISBN" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? and usernumber is not null limit ".addslashes($limit));
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? and usernumber is not null limit " . addslashes($limit));
 				$prep->bind_params("s", $query);
 				break;
 			case "usernumber" :
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber = ? limit ".addslashes($limit));
+				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber = ? limit " . addslashes($limit));
 				$prep->bind_params("i", $query);
 				break;
 		}
 
 		return $prep->execute();
 	}
-	
+
 	function searchDetailed($data) {
 		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.subbook, B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX .
 		"book B left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id)", "order by title");
@@ -173,7 +173,7 @@ class Book {
 			$prep->execute();
 			return $this->get($data["id"]);
 		}
-		
+
 		$this->checkDuplicateNew($data["usernumber"]);
 
 		$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?, coauthor=?");
@@ -193,18 +193,25 @@ class Book {
 	}
 
 	function nextUserNumber() {
-		$prep = $this->db->prepare("select max(usernumber) as nextUserNumber from " . AppConfig :: DB_PREFIX . "book");
+		$prep = $this->db->prepare("select usernumber from " . AppConfig :: DB_PREFIX . "book order by usernumber");
 		$res = $prep->execute();
 
-		$data = array_pop($res);
+		if (count($res) == 0) {
+			return array("nextUserNumber" => 1);
+		}
+		
+		$l = array_shift($res);
+		$prev = $l["usernumber"];
 
-		if ($data["nextUserNumber"]) {
-			$data["nextUserNumber"]++;
-		} else {
-			$data["nextUserNumber"] = 1;
+		foreach ($res as $one) {
+			if ($one["usernumber"] > ($prev + 1)) {
+  			   return array("nextUserNumber" => ($prev + 1));
+			}
+			$prev = $one["usernumber"];
+			
 		}
 
-		return $data;
+		return array("nextUserNumber" => 1);; // Should not occure
 	}
 
 	function bookCount() {
@@ -233,7 +240,6 @@ class Book {
 		$res = $prep->execute();
 		return $res;
 	}
-
 
 	function noPlacement() {
 		$prep = $this->db->prepare("select title, ISBN, usernumber,B.id as id, concat(PLA.lastname, ' ',PLA.firstname) as author from " . AppConfig :: DB_PREFIX .
