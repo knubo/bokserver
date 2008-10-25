@@ -64,7 +64,23 @@ class Book {
 
 		return array_pop($prep->execute());
 	}
+	
+	function getfullISBN($isbn) {
+		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where ISBN = ?");
 
+		$prep->bind_params("s", $isbn);
+
+		$arr = $prep->execute();
+
+		if (count($arr) == 0) {
+			return $arr;
+		}
+
+		$one = array_pop($arr);
+
+		return array($this->getfull($one["id"]));		
+	}
+	
 	function getfullUserNumber($userNumber) {
 		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where usernumber = ?");
 
@@ -204,14 +220,14 @@ class Book {
 		$prev = $l["usernumber"];
 
 		foreach ($res as $one) {
-			if ($one["usernumber"] > ($prev + 1)) {
+			if ($one["usernumber"] > 0 && $one["usernumber"] > ($prev + 1)) {
   			   return array("nextUserNumber" => ($prev + 1));
 			}
-			$prev = $one["usernumber"];
+			$prev = $one["usernumber"];	
 			
 		}
 
-		return array("nextUserNumber" => 1);; // Should not occure
+		return array("nextUserNumber" => $prev + 1); //Last book number reused hits here
 	}
 
 	function bookCount() {
