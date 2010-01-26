@@ -238,6 +238,11 @@ class Book {
 
 		return $data["c"];
 	}
+	
+	function lastRegistered() {
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by id desc limit 50");
+		return $prep->execute();
+	}
 
 	function top30Authors() {
 		$prep = $this->db->prepare("select count(*) as bookcount,P.lastname,P.firstname from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "person P where B.author_id = P.id and B.usernumber is not null group by author_id order by bookcount DESC limit 30");
