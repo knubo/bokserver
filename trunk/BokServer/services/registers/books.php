@@ -68,8 +68,10 @@ switch ($action) {
 		$result = $accBook->countBySeries();
 		include ("../../renders/report_book_series.php");
 		break;
-		
-		
+	case "last_registered":
+	    $result = $accBook->lastRegistered();
+		include ("../../renders/booksearch.php");
+		break;
 	case "placementSummary":
 		$result = $accBook->placementSummary();
 		include ("../../renders/report_placement.php");

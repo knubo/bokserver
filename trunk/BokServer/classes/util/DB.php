@@ -230,26 +230,37 @@ class PrepWrapper {
 		return $myall;
 	}
 
-	function bind_array_params($types, $args) {
+    function bind_array_params($types, $args) {
 
-		$allArgs = array_merge(array (
-			$this->Mysqli,
-			$types
-		), $args);
+        $Args = array();
+        foreach($args as $k => &$arg){
+            $Args[$k] = &$arg;
+        }
 
-		if(!call_user_func_array('mysqli_stmt_bind_param', $allArgs)) {
-			$this->db->report_error();
-		}
-	}
+        $allArgs = array_merge(array (
+        $this->Mysqli,
+        $types
+        ), $Args);
 
-	function bind_params() {
-		$args = func_get_args();
+        if(!call_user_func_array('mysqli_stmt_bind_param', $allArgs)) {
+            $this->db->report_error();
+        }
+    }
 
-		if(!call_user_func_array('mysqli_stmt_bind_param',
-		   array_merge(array ($this->Mysqli), $args))) {
-		  $this->db->report_error();
-	    }
-	}
+    function bind_params() {
+        $args = func_get_args();
+
+        $Args = array();
+        foreach($args as $k => &$arg){
+            $Args[$k] = &$arg;
+        }
+
+        if(!call_user_func_array('mysqli_stmt_bind_param',
+        array_merge(array ($this->Mysqli), $Args))) {
+            $this->db->report_error();
+        }
+    }
+	
 }
 
 class SearchWrapper {
