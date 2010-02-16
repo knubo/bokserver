@@ -68,9 +68,20 @@ switch ($action) {
 		$result = $accBook->countBySeries();
 		include ("../../renders/report_book_series.php");
 		break;
-	case "last_registered":
+	case "all_books":
+	    $result = $accBook->all_books_per_usernumber();
+	    $title = "Alle b&oslash;ker per boknummer";
+		include ("../../renders/report_books_general.php");
+		break;
+	case "per_price":
+	    $result = $accBook->top_expensive();
+	    $title = "Dyreste top 50 b&oslash;ker";
+		include ("../../renders/report_books_general.php");
+		break;
+		case "last_registered":
 	    $result = $accBook->lastRegistered();
-		include ("../../renders/booksearch.php");
+	    $title = "Siste registrerte b&oslash;ker";
+		include ("../../renders/report_books_general.php");
 		break;
 	case "placementSummary":
 		$result = $accBook->placementSummary();

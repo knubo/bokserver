@@ -239,6 +239,17 @@ class Book {
 		return $data["c"];
 	}
 	
+	function top_expensive() {
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by price desc limit 50");
+		return $prep->execute();
+	    
+	}
+	
+	function all_books_per_usernumber() {
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by usernumber");
+		return $prep->execute();
+	}
+	
 	function lastRegistered() {
 		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by id desc limit 50");
 		return $prep->execute();
