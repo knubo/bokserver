@@ -1,4 +1,6 @@
-<table class="searchresult">
+<div class="pageheading">B&oslash;ker uten plassering</div>
+
+<table class="report">
 <tr><th>Boknummer</th><th>Tittel</th><th>ISBN</th><th>Forfatter</th></tr>
 <?php
 $row = 0;
