@@ -66,7 +66,7 @@ class Book {
 	}
 	
 	function getfullISBN($isbn) {
-		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where ISBN = ?");
+		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where ISBN = ? and usernumber is not null");
 
 		$prep->bind_params("s", $isbn);
 
@@ -246,7 +246,7 @@ class Book {
 	}
 	
 	function all_books_per_usernumber() {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by usernumber");
+		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber is not null order by usernumber");
 		return $prep->execute();
 	}
 	
