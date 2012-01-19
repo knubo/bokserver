@@ -7,7 +7,7 @@ class Person {
 	}
 
 	function searchDetailed($data) {
-		$searchWrap = $this->db->search("select * from " . AppConfig :: DB_PREFIX . "person B", "order by lastname");
+		$searchWrap = $this->db->search("select * from " . AppConfig :: prefix() . "person B", "order by lastname");
 		$searchWrap->addAndParam("s", "firstname", $data["firstname"]."%");
 		$searchWrap->addAndParam("s", "lastname", $data["lastname"]."%");
 		
@@ -18,14 +18,14 @@ class Person {
 		$query = implode("%", explode(" ", $query)) . "%";
 
 		if (strlen($type) > 1) {
-			$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "person where " .
+			$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "person where " .
 			"(search1 like ? or " .
 			" search2 like ?) limit ".addslashes($limit));
 			$prep->bind_params("ss", $query, $query);
 			return $prep->execute();
 		}
 
-		$sql = "select * from " . AppConfig :: DB_PREFIX . "person where " .
+		$sql = "select * from " . AppConfig :: prefix() . "person where " .
 		"(search1 like ? or " .
 		" search2 like ?) and ";
 
@@ -55,7 +55,7 @@ class Person {
 	}
 
 	function get($id) {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "person where id = ?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "person where id = ?");
 
 		$prep->bind_params("i", $id);
 
@@ -64,7 +64,7 @@ class Person {
 
 	function checkDuplicate($firstname, $lastname) {
 
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "person where firstname=? and lastname=?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "person where firstname=? and lastname=?");
 
 		$prep->bind_params("ss", $firstname, $lastname);
 
@@ -87,12 +87,12 @@ class Person {
 		$search2 = $data["lastname"] . " " . $data["firstname"];
 
 		if ($data["id"] > 0) {
-			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, reader=?, search1=?, search2=? where id = ?");
+			$prep = $this->db->prepare("update " . AppConfig :: prefix() . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, reader=?, search1=?, search2=? where id = ?");
 			$prep->bind_params("ssiiiiissi", $data["firstname"], $data["lastname"], $data["illustrator"], $data["editor"], $data["author"], $data["translator"], $data["reader"], $search1, $search2, $data["id"]);
 		} else {
 			$this->checkDuplicate($data["firstname"], $data["lastname"]);
 
-			$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, reader=?, search1=?, search2=?");
+			$prep = $this->db->prepare("insert into " . AppConfig :: prefix() . "person set firstname=?, lastname=?, illustrator=?, editor=?, author=?, translator=?, reader=?, search1=?, search2=?");
 			$prep->bind_params("ssiiiiiss", $data["firstname"], $data["lastname"], $data["illustrator"], $data["editor"], $data["author"], $data["translator"], $data["reader"], $search1, $search2);
 
 		}
@@ -106,7 +106,7 @@ class Person {
 	}
 	
 	function summary() {
-	   $prep = $this->db->prepare("select count(*) as c,illustrator,translator,author,editor,reader from " . AppConfig :: DB_PREFIX . "person group by illustrator, translator, author, editor,reader");
+	   $prep = $this->db->prepare("select count(*) as c,illustrator,translator,author,editor,reader from " . AppConfig :: prefix() . "person group by illustrator, translator, author, editor,reader");
 	   return $prep->execute();	
 	}
 }

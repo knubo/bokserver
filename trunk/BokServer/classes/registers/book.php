@@ -11,21 +11,21 @@ class Book {
 		switch ($type) {
 			case "coauthor" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select coauthor from " . AppConfig :: DB_PREFIX . "book where coauthor like ? and usernumber is not null limit " . addslashes($limit));
+				$prep = $this->db->prepare("select coauthor from " . AppConfig :: prefix() . "book where coauthor like ? and usernumber is not null limit " . addslashes($limit));
 				$prep->bind_params("s", $query);
 				break;
 			case "title" :
 				$query = implode("%", explode(" ", $query)) . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where title like ? and usernumber is not null limit " . addslashes($limit));
+				$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where title like ? and usernumber is not null limit " . addslashes($limit));
 				$prep->bind_params("s", $query);
 				break;
 			case "ISBN" :
 				$query = $query . "%";
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where ISBN like ? and usernumber is not null limit " . addslashes($limit));
+				$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where ISBN like ? and usernumber is not null limit " . addslashes($limit));
 				$prep->bind_params("s", $query);
 				break;
 			case "usernumber" :
-				$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber = ? limit " . addslashes($limit));
+				$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where usernumber = ? limit " . addslashes($limit));
 				$prep->bind_params("i", $query);
 				break;
 		}
@@ -34,8 +34,8 @@ class Book {
 	}
 
 	function searchDetailed($data) {
-		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.subbook, B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: DB_PREFIX .
-		"book B left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id)", "order by title");
+		$searchWrap = $this->db->search("select title, ISBN, usernumber,B.subbook, B.id as id, concat(PLA.placement, ' ',PLA.info) as placement from " . AppConfig :: prefix() .
+		"book B left join (" . AppConfig :: prefix() . "placement PLA) on (PLA.id=placement_id)", "order by title");
 
 		$searchWrap->addAndParam("s", "title", $data["title"]);
 		$searchWrap->addAndParam("s", "coauthor", $data["coauthor"]);
@@ -58,7 +58,7 @@ class Book {
 	}
 
 	function get($id) {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where id = ?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where id = ?");
 
 		$prep->bind_params("i", $id);
 
@@ -66,7 +66,7 @@ class Book {
 	}
 	
 	function getfullISBN($isbn) {
-		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where ISBN = ? and usernumber is not null");
+		$prep = $this->db->prepare("select id from " . AppConfig :: prefix() . "book where ISBN = ? and usernumber is not null");
 
 		$prep->bind_params("s", $isbn);
 
@@ -82,7 +82,7 @@ class Book {
 	}
 	
 	function getfullUserNumber($userNumber) {
-		$prep = $this->db->prepare("select id from " . AppConfig :: DB_PREFIX . "book where usernumber = ?");
+		$prep = $this->db->prepare("select id from " . AppConfig :: prefix() . "book where usernumber = ?");
 
 		$prep->bind_params("i", $userNumber);
 
@@ -103,16 +103,16 @@ class Book {
 		"concat(R.lastname, ', ', R.firstname) as readby, B.read_by_id, concat(I.lastname, ', ', I.firstname) as illustrator, I.id as illustrator_id, concat(T.lastname, ', ', T.firstname) as translator, T.id as translator_id,  " .
 		"concat(E.lastname, ', ', E.firstname) as editor, E.id as editor_id, PUB.name as publisher, PUB.id as publisher_id,price,published_year,written_year,C.name as category, C.id as category_id, " .
 		"concat(PLA.placement, ' ',PLA.info) as placement, PLA.id as placement_id,edition,impression,S.name as series, S.id as series_id,number_in_series from " .
-		AppConfig :: DB_PREFIX . "book B " .
-		"left join (" . AppConfig :: DB_PREFIX . "placement PLA) on (PLA.id=placement_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "person R) on (R.id = read_by_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "person A) on (A.id = author_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "person E) on (E.id = editor_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "person I) on (I.id = illustrator_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "person T) on (T.id = translator_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "publisher PUB) on (PUB.id = publisher_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "category C) on (C.id = category_id) " .
-		"left join (" . AppConfig :: DB_PREFIX . "serie S) on (S.id = series)" .
+		AppConfig :: prefix() . "book B " .
+		"left join (" . AppConfig :: prefix() . "placement PLA) on (PLA.id=placement_id) " .
+		"left join (" . AppConfig :: prefix() . "person R) on (R.id = read_by_id) " .
+		"left join (" . AppConfig :: prefix() . "person A) on (A.id = author_id) " .
+		"left join (" . AppConfig :: prefix() . "person E) on (E.id = editor_id) " .
+		"left join (" . AppConfig :: prefix() . "person I) on (I.id = illustrator_id) " .
+		"left join (" . AppConfig :: prefix() . "person T) on (T.id = translator_id) " .
+		"left join (" . AppConfig :: prefix() . "publisher PUB) on (PUB.id = publisher_id) " .
+		"left join (" . AppConfig :: prefix() . "category C) on (C.id = category_id) " .
+		"left join (" . AppConfig :: prefix() . "serie S) on (S.id = series)" .
 		"where B.id = ?");
 
 		$prep->bind_params("i", $id);
@@ -121,7 +121,7 @@ class Book {
 	}
 
 	function checkDuplicateNew($usernumber) {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber=?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where usernumber=?");
 
 		$prep->bind_params("i", $usernumber);
 
@@ -141,7 +141,7 @@ class Book {
 
 	function checkDuplicate($usernumber, $id) {
 
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber=? and id <> ?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where usernumber=? and id <> ?");
 
 		$prep->bind_params("ii", $usernumber, $id);
 
@@ -184,7 +184,7 @@ class Book {
 
 		if ($data["id"] > 0) {
 			$this->checkDuplicate($data["usernumber"], $data["id"]);
-			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?,coauthor=? where id=?");
+			$prep = $this->db->prepare("update " . AppConfig :: prefix() . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?,coauthor=? where id=?");
 			$prep->bind_params("isssssiiiiiisiiiiiiissi", $data["usernumber"], $data["subbook"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["read_by_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["coauthor"], $data["id"]);
 			$prep->execute();
 			return $this->get($data["id"]);
@@ -192,14 +192,14 @@ class Book {
 
 		$this->checkDuplicateNew($data["usernumber"]);
 
-		$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?, coauthor=?");
+		$prep = $this->db->prepare("insert into " . AppConfig :: prefix() . "book set usernumber=?, subbook=?, title=?, subtitle=?, org_title=?, ISBN=?, author_id=?, read_by_id=?, illustrator_id=?, translator_id=?, editor_id=?, publisher_id=?, price=?, published_year=?, written_year=?, category_id=?, placement_id=?, edition=?, impression=?, series=?, number_in_series=?, coauthor=?");
 		$prep->bind_params("isssssiiiiiisiiiiiiiss", $data["usernumber"], $data["subbook"], $data["title"], $data["subtitle"], $data["org_title"], $data["ISBN"], $data["author_id"], $data["read_by_id"], $data["illustrator_id"], $data["translator_id"], $data["editor_id"], $data["publisher_id"], $data["price"], $data["published_year"], $data["written_year"], $data["category_id"], $data["placement_id"], $data["edition"], $data["impression"], $data["series"], $data["number_in_series"], $data["coauthor"]);
 		$prep->execute();
 		return $this->get($this->db->insert_id());
 	}
 
 	function delete($id) {
-		$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "book set usernumber=null where id = ?");
+		$prep = $this->db->prepare("update " . AppConfig :: prefix() . "book set usernumber=null where id = ?");
 		$prep->bind_params("i", $id);
 		$prep->execute();
 
@@ -209,7 +209,7 @@ class Book {
 	}
 
 	function nextUserNumber() {
-		$prep = $this->db->prepare("select usernumber from " . AppConfig :: DB_PREFIX . "book order by usernumber");
+		$prep = $this->db->prepare("select usernumber from " . AppConfig :: prefix() . "book order by usernumber");
 		$res = $prep->execute();
 
 		if (count($res) == 0) {
@@ -231,7 +231,7 @@ class Book {
 	}
 
 	function bookCount() {
-		$prep = $this->db->prepare("select count(*) as c from " . AppConfig :: DB_PREFIX . "book where (usernumber is not null and usernumber <> 0)");
+		$prep = $this->db->prepare("select count(*) as c from " . AppConfig :: prefix() . "book where (usernumber is not null and usernumber <> 0)");
 		$res = $prep->execute();
 
 		$data = array_pop($res);
@@ -240,47 +240,47 @@ class Book {
 	}
 	
 	function top_expensive() {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by price desc limit 50");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book order by price desc limit 50");
 		return $prep->execute();
 	    
 	}
 	
 	function all_books_per_usernumber() {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book where usernumber is not null order by usernumber");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book where usernumber is not null order by usernumber");
 		return $prep->execute();
 	}
 	
 	function lastRegistered() {
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "book order by id desc limit 50");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "book order by id desc limit 50");
 		return $prep->execute();
 	}
 
 	function top30Authors() {
-		$prep = $this->db->prepare("select count(*) as bookcount,P.lastname,P.firstname from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "person P where B.author_id = P.id and B.usernumber is not null group by author_id order by bookcount DESC limit 30");
+		$prep = $this->db->prepare("select count(*) as bookcount,P.lastname,P.firstname from " . AppConfig :: prefix() . "book B, " . AppConfig :: prefix() . "person P where B.author_id = P.id and B.usernumber is not null group by author_id order by bookcount DESC limit 30");
 		$res = $prep->execute();
 		return $res;
 	}
 
 	function countByCategory() {
-		$prep = $this->db->prepare("select count(*) as bookcount,P.name from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "category P where B.category_id = P.id and B.usernumber is not null group by category_id order by bookcount DESC");
+		$prep = $this->db->prepare("select count(*) as bookcount,P.name from " . AppConfig :: prefix() . "book B, " . AppConfig :: prefix() . "category P where B.category_id = P.id and B.usernumber is not null group by category_id order by bookcount DESC");
 		$res = $prep->execute();
 		return $res;
 	}
 
 	function countBySeries() {
-		$prep = $this->db->prepare("select count(*) as bookcount,P.name from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "serie P where B.series = P.id and B.usernumber is not null group by series order by bookcount DESC");
+		$prep = $this->db->prepare("select count(*) as bookcount,P.name from " . AppConfig :: prefix() . "book B, " . AppConfig :: prefix() . "serie P where B.series = P.id and B.usernumber is not null group by series order by bookcount DESC");
 		$res = $prep->execute();
 		return $res;
 	}
 
 	function noPlacement() {
-		$prep = $this->db->prepare("select title, ISBN, usernumber,B.id as id, concat(PLA.lastname, ' ',PLA.firstname) as author from " . AppConfig :: DB_PREFIX .
-		"book B left join (" . AppConfig :: DB_PREFIX . "person PLA) on (PLA.id=author_id) where placement_id is null order by title");
+		$prep = $this->db->prepare("select title, ISBN, usernumber,B.id as id, concat(PLA.lastname, ' ',PLA.firstname) as author from " . AppConfig :: prefix() .
+		"book B left join (" . AppConfig :: prefix() . "person PLA) on (PLA.id=author_id) where placement_id is null order by title");
 		return $prep->execute();
 	}
 
 	function placementSummary() {
-		$prep = $this->db->prepare("select count(*) as bookcount,P.placement from " . AppConfig :: DB_PREFIX . "book B, " . AppConfig :: DB_PREFIX . "placement P where B.placement_id = P.id and B.usernumber is not null group by placement_id order by placement");
+		$prep = $this->db->prepare("select count(*) as bookcount,P.placement from " . AppConfig :: prefix() . "book B, " . AppConfig :: prefix() . "placement P where B.placement_id = P.id and B.usernumber is not null group by placement_id order by placement");
 		$res = $prep->execute();
 		return $res;
 	}

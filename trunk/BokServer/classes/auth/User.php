@@ -37,7 +37,7 @@ class User {
  
 	function authenticate($username, $password) {
 
-		$toBind = $this->db->prepare("select pass,readonly,reducedwrite from ". AppConfig :: DB_PREFIX ."user where username = ?");
+		$toBind = $this->db->prepare("select pass,readonly,reducedwrite from ". AppConfig :: prefix() ."user where username = ?");
 		
 		$toBind->bind_params("s", $username);
 		
@@ -67,14 +67,14 @@ class User {
     }
     
     function getAll() {
-    	$bind = $this->db->prepare("select username, person, readonly,reducedwrite from ". AppConfig :: DB_PREFIX ."user");
+    	$bind = $this->db->prepare("select username, person, readonly,reducedwrite from ". AppConfig :: prefix() ."user");
         return $bind->execute();
     }
     
     function updatePassword($user, $password) {
         $pass = crypt($password, $this->makesalt());
 
-        $bind = $this->db->prepare("update ". AppConfig :: DB_PREFIX ."user set pass=? where username=?");
+        $bind = $this->db->prepare("update ". AppConfig :: prefix() ."user set pass=? where username=?");
         $bind->bind_params("ss", $pass, $user);
         $bind->execute();
         
@@ -83,14 +83,14 @@ class User {
     
     function save($user, $password, $person, $readonly, $reducedwrite) {
         if(!$password) {
-            $bind = $this->db->prepare("update ". AppConfig :: DB_PREFIX ."user set person=?,readonly=?,reducedwrite=? where username=?");
+            $bind = $this->db->prepare("update ". AppConfig :: prefix() ."user set person=?,readonly=?,reducedwrite=? where username=?");
             $bind->bind_params("siis", $person, $readonly, $reducedwrite, $user);
             $bind->execute();
         
             return $this->db->affected_rows();
         }
         
-    	$bind = $this->db->prepare("insert into ". AppConfig :: DB_PREFIX ."user set pass=?, person=?, username=?,readonly=? ON DUPLICATE KEY UPDATE pass=?,person=?,readonly=?,reducedwrite=?");
+    	$bind = $this->db->prepare("insert into ". AppConfig :: prefix() ."user set pass=?, person=?, username=?,readonly=? ON DUPLICATE KEY UPDATE pass=?,person=?,readonly=?,reducedwrite=?");
         $pass = crypt($password, $this->makesalt());
         
         $bind->bind_params("sssisiii", $pass, $person, $user, $readonly, $pass, $person, $readonly,$reducedwrite);
@@ -100,7 +100,7 @@ class User {
     }
     
     function delete($user) {
-        $bind = $this->db->prepare("delete from ". AppConfig :: DB_PREFIX ."user where username=?");
+        $bind = $this->db->prepare("delete from ". AppConfig :: prefix() ."user where username=?");
         
         $bind->bind_params("s", $user);
         $bind->execute();

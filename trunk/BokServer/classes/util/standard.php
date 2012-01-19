@@ -9,18 +9,18 @@ class Standard {
 
 	function setValue($id, $value) {
 
-		$prep = $this->db->prepare("select * from " . AppConfig :: DB_PREFIX . "standard where id=?");
+		$prep = $this->db->prepare("select * from " . AppConfig :: prefix() . "standard where id=?");
 		$prep->bind_params("s", $id);
 		$query_array = $prep->execute();
 
 		if (count($query_array) > 0) {
-			$prep = $this->db->prepare("update " . AppConfig :: DB_PREFIX . "standard set value=? where id=?");
+			$prep = $this->db->prepare("update " . AppConfig :: prefix() . "standard set value=? where id=?");
 			$prep->bind_params("ss", $value, $id);
 			$prep->execute();
 
 			return $this->db->affected_rows();
 		} else {
-			$prep = $this->db->prepare("insert into " . AppConfig :: DB_PREFIX . "standard (id, value) values (?,?)");
+			$prep = $this->db->prepare("insert into " . AppConfig :: prefix() . "standard (id, value) values (?,?)");
 			$prep->bind_params("ss", $id, $value);
 			$prep->execute();
 
@@ -29,7 +29,7 @@ class Standard {
 	}
 
 	function getValue($id) {
-		$prep = $this->db->prepare("select value from " . AppConfig :: DB_PREFIX . "standard where id=?");
+		$prep = $this->db->prepare("select value from " . AppConfig :: prefix() . "standard where id=?");
 		$prep->bind_params("s", $id);
 
 		$return_array = array ();
