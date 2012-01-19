@@ -16,6 +16,8 @@ $backup = new BackupDB($db);
 $regnSession->auth();
 $acStandard = new Standard($db);
 
+date_default_timezone_set(AppConfig::TIMEZONE);
+
 switch ($action) {
 	case "tables" :
 		echo json_encode($backup->tables());
